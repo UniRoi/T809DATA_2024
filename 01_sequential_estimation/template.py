@@ -19,7 +19,11 @@ def gen_data(
     '''Generate n values samples from the k-variate
     normal distribution
     '''
-    pass
+    I_k = np.identity(k)
+
+    cov = var**2 * I_k
+
+    return np.random.multivariate_normal(mean, cov, n)
 
 
 def update_sequence_mean(
@@ -29,21 +33,23 @@ def update_sequence_mean(
 ) -> np.ndarray:
     '''Performs the mean sequence estimation update
     '''
-    pass
+    new_mu = mu + 1/n*(x-mu)
+
+    return new_mu
 
 
-def _plot_sequence_estimate():
-    data = None # Set this as the data
+def plot_sequence_estimate():
+    data = gen_data(100, 2, np.array([0, 0]), 3)
     estimates = [np.array([0, 0])]
     for i in range(data.shape[0]):
-        """
-            your code here
-        """
+
+        new_mu = update_sequence_mean(estimates[-1], data[i], i+1)
+        estimates.append(new_mu)
     plt.plot([e[0] for e in estimates], label='First dimension')
-    """
-        your code here
-    """
+    plt.plot([e[1] for e in estimates], label='Second dimension')
+
     plt.legend(loc='upper center')
+    plt.savefig("T809DATA_2024/01_sequential_estimation/4_1.png")
     plt.show()
 
 
@@ -77,4 +83,30 @@ if __name__ == "__main__":
     """
     Keep all your test code here or in another file.
     """
+    
+    # # Section 1
+    # np.random.seed(1234)
+    # print(gen_data(2, 3, np.array([0, 1, -1]), 1.3))
+    # np.random.seed(1234)
+    # print(gen_data(5, 1, np.array([0.5]), 0.5))
+
+    # # Section 2
+    # np.random.seed(1234)
+    # X = gen_data(300,2,np.array([-1,2]), np.sqrt(4))
+    # # print(X.shape[0])
+
+    # scatter_2d_data(X)
+    # bar_per_axis(X)
+    # plt.show()
+
+    # # Section 3
+    # mean = np.mean(X, 0)
+    # new_x = gen_data(1, 2, np.array([0, 0]), 1)
+    # new_mu = update_sequence_mean(mean, new_x, X.shape[0]+1)
+    # print(new_mu)
+
+    # Section 4
+    # np.random.seed(1234)
+    # plot_sequence_estimate()
+
     pass

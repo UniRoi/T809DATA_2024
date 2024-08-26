@@ -1,0 +1,2 @@
+No, it is not exactly the same, because we are using random values.
+To increase the accuracy, we can eather increase the batch size or/and decrease the variance.
