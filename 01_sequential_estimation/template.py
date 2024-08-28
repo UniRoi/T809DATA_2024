@@ -14,7 +14,7 @@ def gen_data(
     n: int,
     k: int,
     mean: np.ndarray,
-    var: np.float64
+    std: np.float64
 ) -> np.ndarray:
     '''Generate n values samples from the k-variate
     normal distribution
