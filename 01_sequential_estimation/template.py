@@ -53,30 +53,29 @@ def plot_sequence_estimate():
     plt.show()
 
 
-def _square_error(y, y_hat):
-    pass
+def square_error(y, y_hat):
+    return (y - y_hat)**2
 
 
-def _plot_mean_square_error():
-    pass
+def plot_mean_square_error():
+    data = gen_data(100, 2, np.array([0, 0]), 3)
+    estimates = [np.array([0, 0])]
+    sqrt_err_list = [np.array([0, 0])]
+    for i in range(data.shape[0]):
 
+        new_mu = update_sequence_mean(estimates[-1], data[i], i+1)
+        sqrt_err = square_error(np.array([0, 0]), new_mu)
+        estimates.append(new_mu)
+        sqrt_err_list.append(sqrt_err)
 
-# Naive solution to the independent question.
+    sqrt_err_list.pop(0)
+    sqrt_mean = np.mean(np.array(sqrt_err_list), axis=1)
+    plt.plot(sqrt_mean)
+    # plt.plot([e[1] for e in estimates], label='Second dimension')
 
-def gen_changing_data(
-    n: int,
-    k: int,
-    start_mean: np.ndarray,
-    end_mean: np.ndarray,
-    var: np.float64
-) -> np.ndarray:
-    # remove this if you don't go for the independent section
-    pass
-
-
-def _plot_changing_sequence_estimate():
-    # remove this if you don't go for the independent section
-    pass
+    # plt.legend(loc='upper center')
+    plt.savefig("T809DATA_2024/01_sequential_estimation/5_1.png")
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -109,4 +108,6 @@ if __name__ == "__main__":
     # np.random.seed(1234)
     # plot_sequence_estimate()
 
+    # Section 5
+    plot_mean_square_error()
     pass
