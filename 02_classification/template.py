@@ -1,7 +1,7 @@
-# Author: 
-# Date:
-# Project: 
-# Acknowledgements: 
+# Author: Matthias Reiser
+# Date: 28.8.24
+# Project: Computer Exercise 2
+# Acknowledgements: gpt4
 #
 
 
@@ -20,9 +20,19 @@ def gen_data(
     '''
     Return n data points, their classes and a unique list of all classes, from each normal distributions
     shifted and scaled by the values in locs and scales
+    Mostly done by gpt4
     '''
-    ...
 
+    data = [] # create empty list
+    classes = [] # create empty list
+    class_list = list(range(len(locs)))
+    
+    for i, (loc, scale) in enumerate(zip(locs, scales)): # iterate through the lists and do .rvs with only one value for loc and scale
+        point = norm.rvs(loc=loc, scale=scale, size=n)
+        data.extend(point) # append adds a single point to a list
+        classes.extend([i] * n) # extend adds multible variables to the list
+    
+    return np.array(data), np.array(classes), class_list
 
 def mean_of_class(
     features: np.ndarray,
@@ -33,7 +43,9 @@ def mean_of_class(
     Estimate the mean of a selected class given all features
     and targets in a dataset
     '''
-    ...
+    selected_features = features[targets == selected_class]
+
+    return np.array(np.mean(selected_features))
 
 
 def covar_of_class(
@@ -45,7 +57,9 @@ def covar_of_class(
     Estimate the covariance of a selected class given all
     features and targets in a dataset
     '''
-    ...
+    selected_features = features[targets == selected_class]
+
+    return np.cov(selected_features)
 
 
 def likelihood_of_class(
@@ -58,7 +72,8 @@ def likelihood_of_class(
     from a multivariate normal distribution, given the mean
     and covariance of the distribution.
     '''
-    ...
+    return norm.pdf(x=feature, loc=class_mean, scale=class_covar)
+    
 
 
 def maximum_likelihood(
@@ -75,13 +90,20 @@ def maximum_likelihood(
     You should return
     a [test_features.shape[0] x len(classes)] shaped numpy
     array
+
+    Is currently only supporting two classes
     '''
     means, covs = [], []
     for class_label in classes:
-        ...
+        means.append(mean_of_class(train_features, train_targets, class_label))
+        covs.append(covar_of_class(train_features, train_targets, class_label))
+    
     likelihoods = []
     for i in range(test_features.shape[0]):
-        ...
+        likely = []
+        for class_label in classes:
+            likely.append( likelihood_of_class(test_features[i], means[class_label], covs[class_label]))
+        likelihoods.append(np.array(likely))
     return np.array(likelihoods)
 
 
@@ -95,10 +117,77 @@ def predict(likelihoods: np.ndarray):
     array of predictions, e.g. [0, 1, 0, ..., 1, 2]
     '''
     ...
+    return np.argmax(likelihoods, axis=1)
 
 
 if __name__ == "__main__":
     """
     Keep all your test code here or in another file.
     """
+    # Section 1
+    print("Section 1")
+    # print(gen_data(1, [-1, 0, 1], [2, 2, 2]))
+    features, targets, classes = gen_data(50, [-1, np.sqrt(5)], [1, np.sqrt(5)])
+    # print("Data:", features)
+    # print("datalen:", len(features))
+    # print("Classes:", targets)
+    # print("Classeslen:", len(targets))
+
+    # print("Class List:", classes)
+    (train_features, train_targets), (test_features, test_targets) = split_train_test(features, targets, train_ratio=0.8)
+    
+
+    # Section 2
+    # print("Section 2")
+    # better would be if seperated into different arrays based on classes and then do the print 
+    # num_classes = len(classes)
+    # num_per_class = int(len(targets)/num_classes)
+
+    # num_feat_per_class = np.zeros(num_per_class)
+    # print(features[0:num_per_class])
+    # print(len(features[0:num_per_class]))
+    # print(len(features[num_per_class:]))
+    # print(len(num_feat_per_class))
+
+    # plt.scatter(features[0:num_per_class], num_feat_per_class, label=f'Class {targets[0]}')
+    # plt.scatter(features[num_per_class:], num_feat_per_class, marker="x", color='orange', label=f'Class {targets[num_per_class+1]}')
+    # plt.legend(loc='upper center')
+    # plt.savefig("T809DATA_2024/02_classification/2_1.png")
+    # plt.show()
+    
+    # Section 3
+    # print("Section 3")
+    # print(mean_of_class(train_features, train_targets, 0))
+    # print(mean_of_class(train_features, train_targets, 1))
+
+    # # Section 4
+    # print("Section 4")
+    # print(covar_of_class(train_features, train_targets, 0))
+    # print(covar_of_class(train_features, train_targets, 1))
+
+    # Section 5
+    # print("Section 5")
+    # class_mean = mean_of_class(train_features, train_targets, 0)
+    # class_cov = covar_of_class(train_features, train_targets, 0)
+    # print("Likelihood of feature ", likelihood_of_class(test_features[0:3], class_mean, class_cov))
+    # print("Test targets ", test_targets[0:3])
+
+    # Section 6
+    print("Section 6")
+    likelihoods = maximum_likelihood(train_features, train_targets, test_features, classes)
+    # print(likelihoods)
+
+    # Section 7
+    print("Section 7")
+    print("prediction: ", predict(likelihoods))
+    print("Validation: ", test_targets)
+
+    # Section 8
+    print("Section 8")
+    features, targets, classes = gen_data(50, [-4, np.sqrt(2)], [4, np.sqrt(2)])
+    (train_features, train_targets), (test_features, test_targets) = split_train_test(features, targets, train_ratio=0.8)
+    likelihoods = maximum_likelihood(train_features, train_targets, test_features, classes)
+    print("prediction sec 8: ", predict(likelihoods))
+    print("Validation sec 8: ", test_targets)
+
     pass
