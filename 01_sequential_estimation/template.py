@@ -109,5 +109,5 @@ if __name__ == "__main__":
     # plot_sequence_estimate()
 
     # Section 5
-    plot_mean_square_error()
+    # plot_mean_square_error()
     pass
