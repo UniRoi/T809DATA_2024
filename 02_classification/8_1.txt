@@ -1,0 +1,13 @@
+Question A:
+The results are differnet sometimes the first dataset is more accurate 
+and in another run the second one is better. This is because the dataset is 
+very limited, only 50 datapoints and the mean and standard distributions are 
+different.
+
+Question B:
+- Increasing the datapoints result in a higher and stable accuracy
+because there is more training-data with a wider spread across the mean and standard distribution.
+Decreasing the number is making the accuracy worse.
+- Mean: Decreasing the mean, will result in less accuracy, because the values are wider spread
+- Std. dev: Decreasing the std. dev. will result in higher accuracy, because values are now closer together 
+This can lead to overfitting

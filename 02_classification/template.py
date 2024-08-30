@@ -121,14 +121,27 @@ def predict(likelihoods: np.ndarray):
     return np.argmax(likelihoods, axis=1)
 
 
+
 if __name__ == "__main__":
     """
     Keep all your test code here or in another file.
     """
+    num_datapoints = 100
+    mean1 = [-1, np.sqrt(5)]
+    mean2 = [-4, np.sqrt(2)]
+    cov1 = [1, np.sqrt(5)]
+    cov2 = [1, np.sqrt(2)]
+    
+    def compare_arrays(prediction, targets):
+        cnt = 0
+        for i in range(len(prediction)):
+            if prediction[i] == targets[i]:
+                cnt += 1
+        return (cnt/len(prediction)*100)
     # Section 1
     print("Section 1")
     # print(gen_data(1, [-1, 0, 1], [2, 2, 2]))
-    features, targets, classes = gen_data(50, [-1, np.sqrt(5)], [1, np.sqrt(5)])
+    features, targets, classes = gen_data(num_datapoints, mean1, cov1)
     # print("Data:", features)
     # print("datalen:", len(features))
     # print("Classes:", targets)
@@ -167,31 +180,34 @@ if __name__ == "__main__":
     # print(covar_of_class(train_features, train_targets, 1))
 
     # Section 5
-    print("Section 5")
-    class_mean = mean_of_class(train_features, train_targets, 0)
-    class_cov = covar_of_class(train_features, train_targets, 0)
-    print("Likelihood of feature ", likelihood_of_class(test_features[0:3], class_mean, class_cov))
-    print("Test targets ", test_targets[0:3])
+    # print("Section 5")
+    # class_mean = mean_of_class(train_features, train_targets, 0)
+    # class_cov = covar_of_class(train_features, train_targets, 0)
+    # print("Likelihood of feature ", likelihood_of_class(test_features[0:3], class_mean, class_cov))
+    # print("Test targets ", test_targets[0:3])
 
     # Section 6
     print("Section 6")
     likelihoods = maximum_likelihood(train_features, train_targets, test_features, classes)
-    print(likelihoods)
+    # print(likelihoods)
 
     # Section 7
     print("Section 7")
-    print("prediction: ", predict(likelihoods))
+    prediction = predict(likelihoods)
+    print("prediction: ", prediction)
     print("Validation: ", test_targets)
+
+    print("percentage: ", compare_arrays(prediction, test_targets))
 
     # Section 8
     print("Section 8")
-    features, targets, classes = gen_data(50, [-4, np.sqrt(2)], [4, np.sqrt(2)])
+    features, targets, classes = gen_data(num_datapoints, mean2, cov2)
     (train_features, train_targets), (test_features, test_targets) = split_train_test(features, targets, train_ratio=0.8)
     likelihoods = maximum_likelihood(train_features, train_targets, test_features, classes)
     prediction = predict(likelihoods)
     print("prediction sec 8: ", prediction)
     print("Validation sec 8: ", test_targets)
 
-
+    print("percentage sec 8: ", compare_arrays(prediction, test_targets))
 
     pass
