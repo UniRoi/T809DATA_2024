@@ -9,7 +9,7 @@ from tools import load_iris, split_train_test
 
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, multivariate_normal
 
 
 def gen_data(
@@ -45,7 +45,7 @@ def mean_of_class(
     '''
     selected_features = features[targets == selected_class]
 
-    return np.array(np.mean(selected_features))
+    return np.mean(selected_features, axis=0)
 
 
 def covar_of_class(
@@ -59,7 +59,7 @@ def covar_of_class(
     '''
     selected_features = features[targets == selected_class]
 
-    return np.cov(selected_features)
+    return np.cov(selected_features, rowvar = False)
 
 
 def likelihood_of_class(
@@ -72,7 +72,8 @@ def likelihood_of_class(
     from a multivariate normal distribution, given the mean
     and covariance of the distribution.
     '''
-    return norm.pdf(x=feature, loc=class_mean, scale=class_covar)
+    # return norm.pdf(x=feature, loc=class_mean, scale=class_covar)
+    return multivariate_normal.pdf(x=feature, mean=class_mean, cov=class_covar)
     
 
 
@@ -166,16 +167,16 @@ if __name__ == "__main__":
     # print(covar_of_class(train_features, train_targets, 1))
 
     # Section 5
-    # print("Section 5")
-    # class_mean = mean_of_class(train_features, train_targets, 0)
-    # class_cov = covar_of_class(train_features, train_targets, 0)
-    # print("Likelihood of feature ", likelihood_of_class(test_features[0:3], class_mean, class_cov))
-    # print("Test targets ", test_targets[0:3])
+    print("Section 5")
+    class_mean = mean_of_class(train_features, train_targets, 0)
+    class_cov = covar_of_class(train_features, train_targets, 0)
+    print("Likelihood of feature ", likelihood_of_class(test_features[0:3], class_mean, class_cov))
+    print("Test targets ", test_targets[0:3])
 
     # Section 6
     print("Section 6")
     likelihoods = maximum_likelihood(train_features, train_targets, test_features, classes)
-    # print(likelihoods)
+    print(likelihoods)
 
     # Section 7
     print("Section 7")
@@ -187,7 +188,10 @@ if __name__ == "__main__":
     features, targets, classes = gen_data(50, [-4, np.sqrt(2)], [4, np.sqrt(2)])
     (train_features, train_targets), (test_features, test_targets) = split_train_test(features, targets, train_ratio=0.8)
     likelihoods = maximum_likelihood(train_features, train_targets, test_features, classes)
-    print("prediction sec 8: ", predict(likelihoods))
+    prediction = predict(likelihoods)
+    print("prediction sec 8: ", prediction)
     print("Validation sec 8: ", test_targets)
+
+
 
     pass
