@@ -1,6 +1,6 @@
-# Author: 
-# Date:
-# Project: 
+# Author: Matthias Reiser
+# Date: 9.9.2024
+# Project: Computer Exercise 3
 # Acknowledgements: 
 #
 
